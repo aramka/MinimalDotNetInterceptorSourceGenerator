@@ -67,6 +67,8 @@ Interceptor done. Run the app and see it work.
 
 The fact that the intercetpor is a extensio method says, to me at least, there is no support for intercepting static or private and likely many other calls. At least I couldnt figure it.
 
+Also, since many .NET things are not available for use in the interceptor debugging was hard for me. I know people are building unit tests around these and there is support for debugging source generators in unit tests. Hmmm, maybe Ill give it a go next. But, for me to see into the generator code I created a separate project that would log things to file. It worked too. But I had to shake it sometimes as it would intermittently not generate the log or jam the genrator somehow and I would see the some errors in the compile output. Still, it was helpful.
+
 See the code. I hope it helps. Message om github and I answer to the best of my avail.
 
 

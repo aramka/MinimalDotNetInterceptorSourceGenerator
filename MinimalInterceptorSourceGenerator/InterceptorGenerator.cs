@@ -42,6 +42,7 @@ namespace MinimalInterceptorSourceGenerator
                     return location;
                 }
             ).Collect();
+            
             context.RegisterSourceOutput(invocationsLocations, (sourceProductionContext, locations)
               => {
                   // Log.LogMessage("Executing....");
