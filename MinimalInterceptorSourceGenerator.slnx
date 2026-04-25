@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Project Path="MinimalInterceptorSourceGenerator.DemoApp/MinimalInterceptorSourceGenerator.DemoApp.csproj" />
+  <Project Path="MinimalInterceptorSourceGenerator.SharedLibrary/MinimalInterceptorSourceGenerator.SharedLibrary.csproj" />
+  <Project Path="MinimalInterceptorSourceGenerator\MinimalInterceptorSourceGenerator.csproj" />
+</Solution>
