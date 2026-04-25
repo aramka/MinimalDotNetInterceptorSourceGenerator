@@ -34,13 +34,13 @@ In the generator [``public void Initialize(IncrementalGeneratorInitializationCon
 
 There are syntax node types for every single piece of code in C#. In the case of generating an interceptor I need to find the syntaxnode that represents the location of the invocation, function call, I want to intercept. [InvocationExpressionSyntax](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.invocationexpressionsyntax?view=roslyn-dotnet-5.0.0) is the syntaxnode type and I must also check if that invocation is of whatever the name is of the method or function Im targetting, in my case MyMethod.
 
-In the transform function I return [InterceptableLocation]() which I what I will use to generate the interceptor.
+In the transform function I return [InterceptableLocation](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.interceptablelocation?view=roslyn-dotnet-5.0.0) which I what I will use to generate the interceptor.
 
-This part is funny to me and seems akward. The return value from [context.SyntaxProvider.CreateSyntaxProvider](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxvalueprovider.createsyntaxprovider?view=roslyn-dotnet-5.0.0) call above gets passed to another method on the context, [context.RegisterSourceOutput](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.incrementalgeneratorinitializationcontext.registersourceoutput?view=roslyn-dotnet-5.0.0) where I pass a third function that will be passed these code bits that match the predicate and where Im allowed to generate the source.
+This part is funny to me and seems akward. The return value from [context.SyntaxProvider.CreateSyntaxProvider](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.syntaxvalueprovider.createsyntaxprovider?view=roslyn-dotnet-5.0.0) call above gets passed to another method on the context, [context.RegisterSourceOutput](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.incrementalgeneratorinitializationcontext.registersourceoutput?view=roslyn-dotnet-5.0.0) where I pass a third function that will be passed these [InterceptableLocation s](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.interceptablelocation?view=roslyn-dotnet-5.0.0)  that match the predicate and where Im allowed to generate the source.
 
-Seems like a clumsy programming model. I feel like in the transform function that I passed, or may just call it the generate code function, I should be able to generate the code from there. Or maybe, [``IIncrementalGenerator``](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.iincrementalgenerator?view=roslyn-dotnet-5.0.0) itself should have three functions each targeting these concerns. But then again, I dont have to keep up with a compiler code. But then again, compilers have end users too and if Im offering compiler features...then my end users must be able to use them easily.
+Seems like a clumsy programming model. I feel like in the transform function that I passed, or maybe just call it the generate code function, I should be able to generate the code from there. Or maybe, [``IIncrementalGenerator``](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.iincrementalgenerator?view=roslyn-dotnet-5.0.0) itself should have three functions each targeting these concerns. But then again, I dont have to keep up with compiler code. But then again, compilers have end users too and if Im offering compiler features then my end users must be able to use them easily.
 
-Hmm, I oft wonder if the things I build are good because they work, but then when once in a while I get to talk with app support directly where I find that end users are doing all sorts of things to work around my shortcomings.
+Hmm, I oft wonder if the things I build are good because they work, but then once in a while I get to talk with app support directly where I find that end users are doing all sorts of things to work around my shortcomings.
 
 I digress..
 
@@ -65,9 +65,9 @@ Also, the interceptor extension method must be attributed with the magic attribu
 
 Interceptor done. Run the app and see it work.
 
-The fact that the intercetpor is a extensio method says, to me at least, there is no support for intercepting static or private and likely many other calls. At least I couldnt figure it.
+The fact that the intercetpor is an extension method says, to me at least, there is no support for intercepting static or private and likely many other calls. At least I couldnt figure it.
 
-Also, since many .NET things are not available for use in the interceptor debugging was hard for me. I know people are building unit tests around these and there is support for debugging source generators in unit tests. Hmmm, maybe Ill give it a go next. But, for me to see into the generator code I created a separate project that would log things to file. It worked too. But I had to shake it sometimes as it would intermittently not generate the log or jam the genrator somehow and I would see the some errors in the compile output. Still, it was helpful.
+Also, since many .NET things are not available for use in the interceptor debugging was hard for me. I know people are building unit tests around these and there is support for debugging source generators in unit tests. Hmmm, maybe Ill give it a go next. But, for me to see into the generator code I created a separate project that would log things to file. It worked too. But I had to shake it sometimes as it would intermittently not generate the log or jam the genrator somehow and I would see the some errors in the compile output. Still, it was helpful, in particular in seeing the SyntaxNodes I wanted to target. It turns out that ToString on these will emit the code they encapsulate. Handy.
 
 See the code. I hope it helps. Message om github and I answer to the best of my avail.
 
